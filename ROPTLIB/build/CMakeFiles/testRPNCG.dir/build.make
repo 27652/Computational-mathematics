@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB"
+CMAKE_SOURCE_DIR = /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build"
+CMAKE_BINARY_DIR = /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/testRPNCG.dir/depend.make
@@ -77,23 +77,23 @@ testRPNCG_OBJECTS =
 
 # External object files for target testRPNCG
 testRPNCG_EXTERNAL_OBJECTS = \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Element.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Manifold.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Stiefel.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/BlasLapackCppWrapper.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/ForDebug.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/randgen.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/Timer.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Problems/StieSPCA.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Solvers/Solvers.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Solvers/SolversNSM.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Solvers/RPNCG.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/test/mainRPNCG.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/test/testRPNCG.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/SmartSpace.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/SparseMatrix.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/SparseBLAS/nist_spblas.cpp.o" \
-"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Problems/Problem.cpp.o"
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Element.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Manifold.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Stiefel.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/BlasLapackCppWrapper.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/ForDebug.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/randgen.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/Timer.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Problems/StieSPCA.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Solvers/Solvers.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Solvers/SolversNSM.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Solvers/RPNCG.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/test/mainRPNCG.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/test/testRPNCG.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/SmartSpace.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/SparseMatrix.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Others/SparseBLAS/nist_spblas.cpp.o" \
+"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir/Problems/Problem.cpp.o"
 
 bin/testRPNCG: CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Element.cpp.o
 bin/testRPNCG: CMakeFiles/roptlib_test_rpncg_obj.dir/Manifolds/Manifold.cpp.o
@@ -114,10 +114,10 @@ bin/testRPNCG: CMakeFiles/roptlib_test_rpncg_obj.dir/Others/SparseBLAS/nist_spbl
 bin/testRPNCG: CMakeFiles/roptlib_test_rpncg_obj.dir/Problems/Problem.cpp.o
 bin/testRPNCG: CMakeFiles/testRPNCG.dir/build.make
 bin/testRPNCG: CMakeFiles/testRPNCG.dir/compiler_depend.ts
-bin/testRPNCG: /usr/lib/x86_64-linux-gnu/libblas.so
-bin/testRPNCG: /usr/lib/x86_64-linux-gnu/liblapack.so
+bin/testRPNCG: /usr/lib/libblas.so
+bin/testRPNCG: /usr/lib/liblapack.so
 bin/testRPNCG: CMakeFiles/testRPNCG.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Linking CXX executable bin/testRPNCG"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Linking CXX executable bin/testRPNCG"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/testRPNCG.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -129,6 +129,6 @@ CMakeFiles/testRPNCG.dir/clean:
 .PHONY : CMakeFiles/testRPNCG.dir/clean
 
 CMakeFiles/testRPNCG.dir/depend:
-	cd "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB" "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB" "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build" "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build" "/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/testRPNCG.dir/DependInfo.cmake" "--color=$(COLOR)" testRPNCG
+	cd /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build /home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/testRPNCG.dir/DependInfo.cmake "--color=$(COLOR)" testRPNCG
 .PHONY : CMakeFiles/testRPNCG.dir/depend
 

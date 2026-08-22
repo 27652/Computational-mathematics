@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/Manifolds" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/Others" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/Problems" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/Solvers" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/test" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/cwrapper" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/cwrapper/blas" -I"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/cwrapper/lapack"
+CXX_INCLUDES = -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/Manifolds -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/Others -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/Problems -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/Solvers -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/test -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/cwrapper -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/cwrapper/blas -I/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/cwrapper/lapack
 
 CXX_FLAGS = -std=c++11 -include cstring
 

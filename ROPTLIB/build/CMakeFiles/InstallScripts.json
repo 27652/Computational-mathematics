@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/cmake_install.cmake"
+		"/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }

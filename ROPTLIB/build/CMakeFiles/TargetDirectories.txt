@@ -1,4 +1,0 @@
-/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir
-/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/testRPNCG.dir
-/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/edit_cache.dir
-/mnt/c/Users/S2765/Workspace/caculate math/ROPTLIB/build/CMakeFiles/rebuild_cache.dir
