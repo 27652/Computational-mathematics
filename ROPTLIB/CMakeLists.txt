@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 
 project(ROPTLIB_TestRPNCG LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -14,6 +15,7 @@ target_sources(roptlib_test_rpncg_obj PRIVATE
 	Manifolds/Element.cpp
 	Manifolds/Manifold.cpp
 	Manifolds/Stiefel.cpp
+	Manifolds/SphereTx.cpp
 	Others/BlasLapackCppWrapper.cpp
 	Others/ForDebug.cpp
 	Others/randgen.cpp
@@ -23,6 +25,8 @@ target_sources(roptlib_test_rpncg_obj PRIVATE
 	Solvers/Solvers.cpp
 	Solvers/SolversSM.cpp
 	Solvers/SolversNSM.cpp
+	Solvers/SolversSMTR.cpp
+	Solvers/RTRNewton.cpp
 	Solvers/RPNCG.cpp
 	Solvers/RTRNewton.cpp
 	Solvers/SolversSMTR.cpp
@@ -34,6 +38,7 @@ Manifolds/SphereTx.cpp
 Others/SparseMatrix.cpp
 Others/SparseBLAS/nist_spblas.cpp
 Problems/Problem.cpp
+Problems/SphereTxRQ.cpp
 
 )
 
