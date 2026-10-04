@@ -52,6 +52,17 @@ void RPNCG::UpdateData()
     {
         //Mani->EucGradToGrad(x1, egf, &gf1);
     };
+
+    void RPNCG::PrintInfo()
+    {
+        SolversNSM::PrintInfo();
+    };
+
+    void RPNCG::PrintFinalInfo()
+    {
+        SolversNSM::PrintFinalInfo();
+    };
+
 void RPNCG::SetDefaultParams()
     {
         SolversNSM::SetDefaultParams();
