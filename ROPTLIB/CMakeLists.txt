@@ -19,13 +19,18 @@ target_sources(roptlib_test_rpncg_obj PRIVATE
 	Others/randgen.cpp
 	Others/Timer.cpp
 	Problems/StieSPCA.cpp
+	Problems/SphereTxRQ.cpp
 	Solvers/Solvers.cpp
+	Solvers/SolversSM.cpp
 	Solvers/SolversNSM.cpp
 	Solvers/RPNCG.cpp
+	Solvers/RTRNewton.cpp
+	Solvers/SolversSMTR.cpp
 	test/mainRPNCG.cpp
 	test/testRPNCG.cpp
 
 Manifolds/SmartSpace.cpp
+Manifolds/SphereTx.cpp
 Others/SparseMatrix.cpp
 Others/SparseBLAS/nist_spblas.cpp
 Problems/Problem.cpp
@@ -65,4 +70,3 @@ target_link_libraries(testRPNCG PRIVATE
     LAPACK::LAPACK
     BLAS::BLAS
 )
-

@@ -1,4 +1,0 @@
-/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/roptlib_test_rpncg_obj.dir
-/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/testRPNCG.dir
-/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/edit_cache.dir
-/home/s2765/data_dir/github/Computational-mathematics/ROPTLIB/build/CMakeFiles/rebuild_cache.dir
