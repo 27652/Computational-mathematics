@@ -1,5 +1,11 @@
 % !TeX program = xelatex
-\documentclass[UTF8]{ctexart}
+\documentclass[a4paper,10pt]{article}
+\usepackage{xeCJK}
+\setCJKmainfont{Noto Sans CJK SC}
+\setCJKsansfont{Noto Sans CJK SC}
+\setCJKmonofont{Noto Sans Mono CJK SC}
+\renewcommand{\abstractname}{摘要}
+\renewcommand{\today}{\number\year 年\number\month 月\number\day 日}
 \usepackage{amsmath,amssymb,booktabs,geometry,array}
 \geometry{a4paper,margin=2.4cm}
 \newcommand{\code}[1]{\texttt{#1}}
