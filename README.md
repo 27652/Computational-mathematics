@@ -14,7 +14,7 @@ C++ implementation of the [Riemannian Proximal Newton-CG method](https://arxiv.o
 
 - [x] Implement the initial C++ RPN-CG solver and sparse PCA test entry point.
 - [x] Document class relationships, solver logic, parameters, and memory management.
-- [ ] **Check MATLAB/C++ agreement:** share input data and initial points, align retractions and stopping criteria, and investigate differences in inner iterations.
+- [x] **Check MATLAB/C++ agreement:** share input data and initial points, align retractions and stopping criteria, and investigate differences in inner iterations.
 - [ ] **Run fair benchmarks:** compare C++ RPN-CG with a C++ first-order baseline (such as IARPG) and the MATLAB second-order implementation using matched settings and repeated runs.
 - [ ] **Publish results and polish:** add timing, accuracy, and operation-count tables to the LaTeX report; record hardware and software settings; clean up solver configuration and code style.
 
