@@ -4,10 +4,12 @@
 #include "Element.h"
 #include<Solvers.h>
 #include "Problem.h"
+#include "Problems/StieSPCA.h"
 #include "f2c.h"
 //#include "Solvers/RPNCG.h"
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
 
 
 
@@ -41,6 +43,45 @@ static Vector GatherVector(const Vector &v, const std::vector<integer> &ids)
     return out;
 }
 
+static Vector Symmetric(const Vector &a)
+{
+    return (a + a.GetTranspose()) * static_cast<realdp>(0.5);
+}
+
+static Vector AstarOp(const Vector &lambda, const Variable &x)
+{
+    return (x * Symmetric(lambda)) * static_cast<realdp>(-1.0);
+}
+
+static Vector Aop(const Vector &eta, const Variable &x)
+{
+    return (eta.GetTranspose() * x + x.GetTranspose() * eta) * static_cast<realdp>(-0.5);
+}
+
+static Vector MakeScalarWeight(realdp value)
+{
+    Vector weight(1);
+    weight.ObtainWriteEntireData()[0] = value;
+    return weight;
+}
+
+static Vector ProxAt(const Vector &B, realdp t, const Problem *prob)
+{
+    Vector result(B);
+    Vector weight = MakeScalarWeight(static_cast<realdp>(1.0) / t);
+    prob->ProxW(B, weight, &result);
+    return result;
+}
+
+static Vector JacobianAt(const Vector &B, const Vector &eta, realdp t,
+                         const Problem *prob)
+{
+    Vector result(eta);
+    Vector weight = MakeScalarWeight(static_cast<realdp>(1.0) / t);
+    prob->CalJW(B, eta, weight, &result);
+    return result;
+}
+
 // MODIFIED: directly builds MATLAB Bbar = reshape(x * tmpp, n*m, d)(id1, :).
 static Vector BuildBbar(const Variable &x, const std::vector<integer> &id1);
 
@@ -66,15 +107,16 @@ void RPNCG::UpdateData()
 void RPNCG::SetDefaultParams()
     {
         SolversNSM::SetDefaultParams();
-        tau = 0.5;
-        rho1 = 1e-4;
+        tau = 1e2;
+        rho1 = 1e-3;
         rho2 = 0.5;
-        w1 = 0.5;
-        w2 = 2;
-        gamma = 0.1;
-        vartheta = 0.1;
+        w1 = 1.1;
+        w2 = 0.9;
+        gamma = 0.01;
+        vartheta = 0.01;
         theta = 0.5;
-        kappa = 0.5;
+        kappa = 0.1;
+        max_innit = 200;
     };
 
 
@@ -92,7 +134,7 @@ void RPNCG::SetDefaultParams()
 		realdp err = std::numeric_limits<realdp>::infinity();
 
 
-    f1 = Prob->f(x1);
+    f1 = Prob->f(x1) + Prob->g(x1);
     nf++;
     f2=f1;
 
@@ -100,7 +142,9 @@ void RPNCG::SetDefaultParams()
     Prob->EucGrad(x1, &egf);
     ng++;
 
-    realdp t = 1.0; // 后面建议用 1 / ((StieSPCA*)Prob)->L
+    realdp t = 1.0;
+    if (const StieSPCA *spca = dynamic_cast<const StieSPCA *>(Prob))
+        t = 1.0 / spca->L;
     realdp t0 = t;
 
     integer flag = 0;
@@ -151,10 +195,9 @@ void RPNCG::SetDefaultParams()
 
       integer ssn_iter = 0;
 //find dir - compute search direction using semi-smooth Newton-CG method
-		  Vector v = FindDir(
-            x1, egf, t, &Dinitial, 1e-12, &ssn_iter
+        Vector v = FindDir(
+            x1, egf, t, &Dinitial, innertol, &ssn_iter
         );
-        Vector lambda = Dinitial;
         // nv = norm(v) - Frobenius norm of the search direction
         nv = v.Fnorm();
         const Vector Blambda = x1 * Dinitial;
@@ -180,7 +223,8 @@ void RPNCG::SetDefaultParams()
         const integer num1 = static_cast<integer>(id1.size()); // MODIFIED: avoid undefined ToIntegerSize
         const integer num2 = static_cast<integer>(id2.size()); // MODIFIED: avoid undefined ToIntegerSize
 
-        max_innit = std::lround(static_cast<realdp>(1.2) * num1);
+        max_innit = std::max<integer>(1, std::min<integer>(200,
+            static_cast<integer>(std::lround(static_cast<realdp>(1.2) * num1))));
 
         Vector v_bar = GatherVector(v, id1); // MODIFIED: MATLAB v_bar = v(id1)
         Vector v_hat = GatherVector(v, id2); // MODIFIED: MATLAB v_hat = v(id2)
@@ -196,10 +240,8 @@ void RPNCG::SetDefaultParams()
 
         // tCG - solve tridiagonal CG subproblem for w
         Vector w = tCG(
-            x1, egf, v, nv, id1, id2, // MODIFIED: pass actual std::vector index sets
-            Blambda, tmp11,
-            t, &tcg_iter, &status
-        );
+            x1, egf, v, nv, id1, id2,
+            Blambda, tmp11, t, &tcg_iter, &status);
 
         // Assemble u = v + w (MATLAB: u(id2) = v_hat; u(id1) = v_bar + w)
         // Since w is only defined on id1 subspace, u = v_bar + w at id1, v_hat at id2
@@ -243,7 +285,7 @@ void RPNCG::SetDefaultParams()
             {
                 Mani->Retraction(x1, u, &x2);
                 nR++;
-                f2 = Prob->f(x2);
+                f2 = Prob->f(x2) + Prob->g(x2);
                 nf++;
 
                 xold = x1;
@@ -258,7 +300,7 @@ void RPNCG::SetDefaultParams()
 
                 Mani->Retraction(x1, u, &x2);
                 nR++;
-                f2 = Prob->f(x2);
+                f2 = Prob->f(x2) + Prob->g(x2);
                 nf++;
 
                 if (f2 > fold - rho1 * nvold * nvold)
@@ -267,7 +309,7 @@ void RPNCG::SetDefaultParams()
                     Vector au = uold*alpha;
                     Mani->Retraction(xold, au, &x2);
                     nR++;
-                    f2 = Prob->f(x2);
+                    f2 = Prob->f(x2) + Prob->g(x2);
                     nf++;
 
                     btiter = 0;
@@ -277,7 +319,7 @@ void RPNCG::SetDefaultParams()
                         au = uold* alpha;
                         Mani->Retraction(xold, au, &x2);
                         nR++;
-                        f2 = Prob->f(x2);
+                        f2 = Prob->f(x2) + Prob->g(x2);
                         nf++;
                         btiter++;
                     }
@@ -292,7 +334,7 @@ void RPNCG::SetDefaultParams()
             Vector au = u*alpha;
             Mani->Retraction(x1, au, &x2);
             nR++;
-            f2 = Prob->f(x2);
+            f2 = Prob->f(x2) + Prob->g(x2);
             nf++;
 
             btiter = 0;
@@ -304,7 +346,7 @@ void RPNCG::SetDefaultParams()
                 au = u* alpha;
                 Mani->Retraction(x1, au, &x2);
                 nR++;
-                f2 = Prob->f(x2);
+                f2 = Prob->f(x2) + Prob->g(x2);
                 nf++;
                 btiter++;
             }
@@ -389,30 +431,135 @@ void RPNCG::SetDefaultParams()
     realdp innertol,
     integer *inneriter
 ) const {
-    Vector result = Mani->GetEMPTY();
+    if (t <= 0 || Dinitial == nullptr || inneriter == nullptr)
+        throw std::invalid_argument("RPNCG::FindDir: invalid step size or output pointer");
 
-    // RPN-CG proximal map: prox(x - t * grad, t, mu)
-    // ROPTLIB ProxW: prox(x, Weight) - scalar weight when lengthW=1
-    // adavalue corresponds to inverse step / Lipschitz-like weight
-    integer outSMCGiter = 0;
+    const integer r = x.Getcol();
+    const realdp lambda0 = static_cast<realdp>(0.2);
+    const realdp nu = static_cast<realdp>(0.99);
+    const realdp cg_tol = static_cast<realdp>(0.1);
+    const realdp eta1 = static_cast<realdp>(0.2);
+    const realdp eta2 = static_cast<realdp>(0.75);
+    const realdp gamma1 = static_cast<realdp>(3.0);
+    const realdp gamma2 = static_cast<realdp>(5.0);
+    const realdp beta = static_cast<realdp>(0.1);
+    const integer max_newton = 1000;
+    const integer max_cg = 30;
 
-    Mani->TangentSpaceProximalMap(
-        const_cast<Variable &>(x),
-        egf,
-        1.0 / t,
-        innertol,
-        0,
-        0,
-        Vector(),
-        Prob,
-        Dinitial,
-        inneriter,
-        &outSMCGiter,
-        nullptr,
-        &result
-    );
+    Vector z(*Dinitial);
+    auto makeB = [&](const Vector &multiplier) -> Vector {
+        return x - t * (egf - AstarOp(multiplier, x));
+    };
+    auto residual = [&](const Vector &multiplier, const Vector &B) -> Vector {
+        Vector prox = ProxAt(B, t, Prob);
+        return Aop(prox - x, x);
+    };
+    auto jacobian = [&](const Vector &B, const Vector &direction) -> Vector {
+        return t * Aop(JacobianAt(B, AstarOp(direction, x), t, Prob), x);
+    };
 
-    return result;
+    Vector B = makeB(z);
+    Vector F = residual(z, B);
+    realdp normF = F.Fnorm();
+    const integer q = 5; // nonmonotone window used in driver_rpncg.m
+    std::vector<realdp> recent(static_cast<size_t>(q), normF);
+    recent[static_cast<size_t>(q - 1)] = normF;
+    realdp regularization = lambda0;
+    integer iterations = 0;
+
+    while (normF * normF > innertol && iterations < max_newton)
+    {
+        const realdp mu = regularization * std::max(std::min(normF, static_cast<realdp>(0.1)), static_cast<realdp>(1e-11));
+        Vector d(z);
+        d.SetToZeros();
+        Vector cg_r(-1.0 * F);
+        Vector cg_p(cg_r);
+        realdp rr = cg_r.DotProduct(cg_r);
+        const realdp cg_rhs_scale = regularization * normF;
+        integer cg_iterations = 0;
+
+        // The MATLAB stopping test is relative to ||d||, with d initialized
+        // at zero.  Its first threshold is therefore zero; perform the first
+        // CG step explicitly before applying that test.
+        if (rr > 0)
+        {
+            Vector Ad = jacobian(B, cg_p) + mu * cg_p;
+            const realdp denom = cg_p.DotProduct(Ad);
+            if (denom > 0 && std::isfinite(denom))
+            {
+                const realdp alpha = rr / denom;
+                d = d + alpha * cg_p;
+                cg_r = cg_r - alpha * Ad;
+                const realdp rr_new = cg_r.DotProduct(cg_r);
+                if (rr > std::numeric_limits<realdp>::min())
+                    cg_p = cg_r + (rr_new / rr) * cg_p;
+                rr = rr_new;
+                ++cg_iterations;
+            }
+        }
+
+        while (std::sqrt(rr) > cg_tol * std::min(cg_rhs_scale * d.Fnorm(), static_cast<realdp>(1.0)) && cg_iterations < max_cg)
+        {
+            Vector Ad = jacobian(B, cg_p) + mu * cg_p;
+            const realdp denom = cg_p.DotProduct(Ad);
+            if (!(denom > 0) || !std::isfinite(denom))
+                break;
+            const realdp alpha = rr / denom;
+            d = d + alpha * cg_p;
+            cg_r = cg_r - alpha * Ad;
+            const realdp rr_new = cg_r.DotProduct(cg_r);
+            if (rr <= std::numeric_limits<realdp>::min())
+                break;
+            cg_p = cg_r + (rr_new / rr) * cg_p;
+            rr = rr_new;
+            ++cg_iterations;
+        }
+
+        Vector ztrial = z + d;
+        Vector Btrial = makeB(ztrial);
+        Vector Ftrial = residual(ztrial, Btrial);
+        const realdp normTrial = Ftrial.Fnorm();
+
+        if (normTrial < nu * *std::max_element(recent.begin(), recent.end()))
+        {
+            z = ztrial;
+            B = Btrial;
+            F = Ftrial;
+            normF = normTrial;
+            recent[static_cast<size_t>(iterations % q)] = normF;
+        }
+        else
+        {
+            const realdp dnorm2 = d.DotProduct(d);
+            realdp rho = -Ftrial.DotProduct(d) / std::max(dnorm2, static_cast<realdp>(1e-30));
+            if (rho >= eta1 && normTrial > 0)
+            {
+                Vector v = z - (Ftrial.DotProduct(z - ztrial) / (normTrial * normTrial)) * Ftrial;
+                Vector Bv = makeB(v);
+                Vector Fv = residual(v, Bv);
+                if (Fv.Fnorm() <= normF)
+                {
+                    z = v; B = Bv; F = Fv; normF = F.Fnorm();
+                }
+                else
+                {
+                    z = z - beta * F;
+                    B = makeB(z); F = residual(z, B); normF = F.Fnorm();
+                }
+            }
+            if (rho >= eta2)
+                regularization = std::max(regularization / 4, static_cast<realdp>(1e-5));
+            else if (rho >= eta1)
+                regularization *= (1 + gamma1) / 2;
+            else
+                regularization *= (gamma1 + gamma2) / 2;
+        }
+        ++iterations;
+    }
+
+    *Dinitial = z;
+    *inneriter = iterations;
+    return ProxAt(B, t, Prob) - x;
 }
 
 
@@ -446,6 +593,14 @@ void RPNCG::SetDefaultParams()
     const integer id1_size = static_cast<integer>(id1.size()); // MODIFIED: std::vector size
     const integer id2_size = static_cast<integer>(id2.size()); // MODIFIED: std::vector size
 
+    // With no active entries the constrained Newton correction has no
+    // variables.  Avoid constructing a 0-by-d BLAS operand.
+    if (id1_size == 0)
+    {
+        *status = RPNCG_EARLY2;
+        return Vector(0);
+    }
+
     // MODIFIED: MATLAB v_bar = v(id1), v_hat = v(id2).
     Vector v_bar = GatherVector(v, id1);
     Vector v_hat = GatherVector(v, id2);
@@ -473,7 +628,12 @@ void RPNCG::SetDefaultParams()
     // tol2 = trace(gf' * v) + 0.5 * tol1
     // Since egf and v are vectors, trace(egf^T * v) = egf^T * v = dot product
     realdp trace_egfv = egf.DotProduct(v);  // Computes dot product
-    realdp tol2 = trace_egfv + 0.5 * tol1;
+    // G_x(v)-G_x(0), including the nonsmooth part.  Omitting these terms
+    // changes the first tCG acceptance test for sparse objectives.
+    Variable xPlusV(x);
+    xPlusV = x + v;
+    realdp tol2 = trace_egfv + 0.5 * tol1
+        + Prob->g(xPlusV) - Prob->g(x);
 
 
 
@@ -646,7 +806,10 @@ for (integer k = 0; k < id2_size; ++k)
         //x_d = x.main+d;
 
         // err_2 = gf(:)' * d(:) + 0.5 * err_1 - energy condition 2 (gradient condition)
-        realdp err_2 = egf.DotProduct(d_vec) + 0.5 * err_1;//+mu*su abs x_d -x.hx
+        Variable xPlusD(x);
+        xPlusD = x + d_vec;
+        realdp err_2 = egf.DotProduct(d_vec) + 0.5 * err_1
+            + Prob->g(xPlusD) - Prob->g(x);
 
 
         //err1 and 2 finished
